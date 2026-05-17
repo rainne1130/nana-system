@@ -4,6 +4,8 @@ export default function AdminPage({ orders }) {
 
   const [markMode, setMarkMode] = useState(false);
 
+  const [localOrders, setLocalOrders] = useState(orders);
+
   return (
     <div className="bg-white rounded-3xl shadow-xl p-10">
 
@@ -43,7 +45,7 @@ export default function AdminPage({ orders }) {
           </div>
         )}
 
-        {orders.map((order) => (
+        {localOrders.map((order) => (
 
           <div
             key={order.id}
@@ -64,6 +66,22 @@ export default function AdminPage({ orders }) {
                 <input
                   type="checkbox"
                   checked={order.isMarked}
+
+                  onChange={() => {
+
+                    setLocalOrders((prev) =>
+                      prev.map((item) =>
+                        item.id === order.id
+                          ? {
+                              ...item,
+                              isMarked: !item.isMarked,
+                            }
+                          : item
+                      )
+                    );
+
+                  }}
+
                   className="w-5 h-5 accent-green-500"
                 />
 
