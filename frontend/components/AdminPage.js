@@ -67,18 +67,39 @@ export default function AdminPage({ orders }) {
                   type="checkbox"
                   checked={order.isMarked}
 
-                  onChange={() => {
+                  onChange={async () => {
+
+                    const newMarked = !order.isMarked;
 
                     setLocalOrders((prev) =>
                       prev.map((item) =>
                         item.id === order.id
                           ? {
                               ...item,
-                              isMarked: !item.isMarked,
+                              isMarked: newMarked,
                             }
                           : item
                       )
                     );
+
+                    try {
+
+                      await fetch("/api/update-mark", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          orderId: order.id,
+                          isMarked: newMarked ? 1 : 0,
+                        }),
+                      });
+
+                    } catch (error) {
+
+                      console.error(error);
+
+                    }
 
                   }}
 
