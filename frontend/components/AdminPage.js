@@ -1,11 +1,39 @@
+import { useState } from "react";
+
 export default function AdminPage({ orders }) {
+
+  const [markMode, setMarkMode] = useState(false);
 
   return (
     <div className="bg-white rounded-3xl shadow-xl p-10">
 
-      <h2 className="text-3xl font-bold text-sky-500 mb-8">
-        管理員後台
-      </h2>
+      <div className="flex justify-between items-center mb-8">
+
+  <h2 className="text-3xl font-bold text-sky-500">
+      管理員後台
+    </h2>
+
+    {!markMode ? (
+
+      <button
+        onClick={() => setMarkMode(true)}
+        className="bg-yellow-400 hover:bg-yellow-500 text-white px-5 py-2 rounded-xl font-bold"
+      >
+        標記模式
+      </button>
+
+    ) : (
+
+      <button
+        onClick={() => setMarkMode(false)}
+        className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-xl font-bold"
+      >
+        標記完成
+      </button>
+
+    )}
+
+  </div>
 
       <div className="flex flex-col gap-4">
 
@@ -19,10 +47,31 @@ export default function AdminPage({ orders }) {
 
           <div
             key={order.id}
-            className="bg-sky-50 p-5 rounded-2xl border border-sky-100 text-black"
+            className={`
+              p-5 rounded-2xl border text-black relative
+              ${
+                order.isMarked
+                  ? "bg-green-100 border-green-300"
+                  : "bg-sky-50 border-sky-100"
+              }
+            `}
           >
 
-            <div className="grid grid-cols-2 gap-4">
+            {markMode && (
+
+              <div className="absolute top-4 left-4">
+
+                <input
+                  type="checkbox"
+                  checked={order.isMarked}
+                  className="w-5 h-5 accent-green-500"
+                />
+
+              </div>
+
+            )}
+
+            <div className="grid grid-cols-2 gap-4 pl-8">
 
               <div>
                 <span className="font-bold">日期：</span>
