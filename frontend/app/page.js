@@ -325,7 +325,16 @@ export default function Home() {
       }
 
       // 重新讀取工單
-      const refreshRes = await fetch("/api/orders");
+      const refreshRes = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: user.username,
+          role: user.role,
+        }),
+      });
 
       const refreshData = await refreshRes.json();
 
