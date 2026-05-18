@@ -8,6 +8,7 @@ export async function POST(req) {
     const body = await req.json();
 
     const {
+      username,
       date,
       nickname,
       bossId,
@@ -33,9 +34,10 @@ export async function POST(req) {
         quantity,
         totalPrice,
         totalTime,
-        status
+        status,
+        username
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         date,
@@ -48,6 +50,7 @@ export async function POST(req) {
         totalPrice,
         totalTime,
         status,
+        username,
       ]
     );
 

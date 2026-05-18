@@ -22,6 +22,10 @@ export default function OrdersPage({ orders }) {
             className="bg-sky-50 p-5 rounded-2xl border border-sky-100 text-black"
           >
 
+            <div className="text-green-600 font-bold mb-2">
+              建立者帳號：{order.username}
+            </div>
+
             <div>日期：{order.date}</div>
 
             <div>陪陪：{order.nickname}</div>

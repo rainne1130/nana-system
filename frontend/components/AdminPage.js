@@ -110,6 +110,10 @@ export default function AdminPage({ orders }) {
 
             )}
 
+            <div className="mb-4 text-green-600 font-bold">
+              建立者帳號：{order.username}
+            </div>
+
             <div className="grid grid-cols-2 gap-4 pl-8">
 
               <div>

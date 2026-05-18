@@ -277,7 +277,11 @@ export default function Home() {
     setIsPaused(false);
 
     // 建立工單
+    const user = JSON.parse(localStorage.getItem("user"));
+
     const newOrder = {
+      username: user.username,
+
       date,
       nickname,
       bossId,
