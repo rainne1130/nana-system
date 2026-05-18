@@ -8,18 +8,25 @@ export async function POST(req) {
     const body = await req.json();
 
     const {
-      username
+      role
     } = body;
 
-    // 所有人都只能看自己的工單
+    // 只有 admin 可查看
+    if (role !== "admin") {
+
+      return NextResponse.json({
+        success: false,
+        message: "無權限",
+      });
+
+    }
+
     const [rows] = await pool.query(
       `
       SELECT *
       FROM orders
-      WHERE username = ?
       ORDER BY id DESC
-      `,
-      [username]
+      `
     );
 
     return NextResponse.json({
@@ -33,7 +40,7 @@ export async function POST(req) {
 
     return NextResponse.json({
       success: false,
-      message: "取得工單失敗",
+      message: "取得管理工單失敗",
     });
 
   }

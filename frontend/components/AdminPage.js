@@ -1,45 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function AdminPage({ orders }) {
+export default function AdminPage() {
 
   const [markMode, setMarkMode] = useState(false);
 
-  const [localOrders, setLocalOrders] = useState(orders);
+  const [localOrders, setLocalOrders] = useState([]);
+
+  // 讀取全部工單
+  useEffect(() => {
+
+    const fetchAdminOrders = async () => {
+
+      try {
+
+        const user = JSON.parse(
+          localStorage.getItem("user")
+        );
+
+        const res = await fetch("/api/admin-orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            role: user.role,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          setLocalOrders(data.orders);
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    };
+
+    fetchAdminOrders();
+
+  }, []);
 
   return (
     <div className="bg-white rounded-3xl shadow-xl p-10">
 
       <div className="flex justify-between items-center mb-8">
 
-  <h2 className="text-3xl font-bold text-sky-500">
-      管理員後台
-    </h2>
+        <h2 className="text-3xl font-bold text-sky-500">
+          管理員後台
+        </h2>
 
-    {!markMode ? (
+        {!markMode ? (
 
-      <button
-        onClick={() => setMarkMode(true)}
-        className="bg-yellow-400 hover:bg-yellow-500 text-white px-5 py-2 rounded-xl font-bold"
-      >
-        標記模式
-      </button>
+          <button
+            onClick={() => setMarkMode(true)}
+            className="bg-yellow-400 hover:bg-yellow-500 text-white px-5 py-2 rounded-xl font-bold"
+          >
+            標記模式
+          </button>
 
-    ) : (
+        ) : (
 
-      <button
-        onClick={() => setMarkMode(false)}
-        className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-xl font-bold"
-      >
-        標記完成
-      </button>
+          <button
+            onClick={() => setMarkMode(false)}
+            className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-xl font-bold"
+          >
+            標記完成
+          </button>
 
-    )}
+        )}
 
-  </div>
+      </div>
 
       <div className="flex flex-col gap-4">
 
-        {orders.length === 0 && (
+        {localOrders.length === 0 && (
           <div className="text-gray-500">
             目前尚無工單資料
           </div>

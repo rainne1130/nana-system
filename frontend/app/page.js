@@ -442,7 +442,7 @@ export default function Home() {
 
             {/* 管理員後台 */}
             {page === "admin" && role === "admin" && (
-              <AdminPage orders={orders} />
+              <AdminPage />
             )}
 
           </div>
