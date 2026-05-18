@@ -9,7 +9,7 @@ export async function POST(req) {
 
     const {
       username,
-      role,
+      role
     } = body;
 
     let rows;
@@ -17,7 +17,7 @@ export async function POST(req) {
     // admin 看全部
     if (role === "admin") {
 
-      const [allOrders] = await pool.query(
+      [rows] = await pool.query(
         `
         SELECT *
         FROM orders
@@ -25,14 +25,10 @@ export async function POST(req) {
         `
       );
 
-      rows = allOrders;
+    } else {
 
-    }
-
-    // player 只看自己的
-    else {
-
-      const [myOrders] = await pool.query(
+      // player 只能看自己的
+      [rows] = await pool.query(
         `
         SELECT *
         FROM orders
@@ -41,8 +37,6 @@ export async function POST(req) {
         `,
         [username]
       );
-
-      rows = myOrders;
 
     }
 

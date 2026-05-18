@@ -65,6 +65,7 @@ export async function POST(req) {
     return NextResponse.json({
       success: false,
       message: "新增工單失敗",
+      error: error.message,
     });
 
   }
