@@ -63,12 +63,12 @@ export default function OrderForm({
           }`}
         />
 
-        {/* 老闆ID */}
+        {/* 老闆暱稱 */}
         <input
           disabled={isRunning}
           value={bossId}
           onChange={(e) => setBossId(e.target.value)}
-          placeholder="老闆ID+UID"
+          placeholder="老闆暱稱"
           className={`w-full p-3 rounded-2xl border border-sky-200 text-black ${
             isRunning ? "bg-gray-100 cursor-not-allowed" : ""
           }`}

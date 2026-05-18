@@ -49,7 +49,20 @@ export default function Home() {
 
       try {
 
-        const res = await fetch("/api/orders");
+        const user = JSON.parse(
+          localStorage.getItem("user")
+        );
+
+        const res = await fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: user.username,
+            role: user.role,
+          }),
+        });
 
         const data = await res.json();
 

@@ -4,47 +4,73 @@ export default function Sidebar({
   handleLogout
 }) {
 
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
+
   return (
-    <div className="w-[260px] bg-white shadow-xl p-6 rounded-r-3xl">
+    <div className="w-[260px] bg-white shadow-xl p-6 rounded-r-3xl flex flex-col min-h-screen">
 
-      <h1 className="text-2xl font-bold text-sky-500 mb-10">
-        奈奈電競工作室
-      </h1>
+      {/* 上方 */}
+      <div>
 
-      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-bold text-sky-500 mb-3">
+          奈奈電競工作室
+        </h1>
 
-        {/* 開設表單 */}
-        <button
-          onClick={() => setPage("form")}
-          className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
-        >
-          📝 建立陪玩表單
-        </button>
+        {/* 目前登入帳號 */}
+        <div className="bg-sky-50 border border-sky-100 rounded-2xl p-3 text-sm text-black mb-8">
 
-        {/* 工單明細 */}
-        <button
-          onClick={() => setPage("orders")}
-          className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
-        >
-          📄 工單歷史紀錄
-        </button>
+          <div className="font-bold text-sky-500 mb-1">
+            目前登入帳號
+          </div>
 
-        {/* 管理員後台 */}
-        {role === "admin" && (
+          <div>
+            {user?.username}
+          </div>
 
+        </div>
+
+        <div className="flex flex-col gap-4">
+
+          {/* 開設表單 */}
           <button
-            onClick={() => setPage("admin")}
+            onClick={() => setPage("form")}
             className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
           >
-            ⚙ 管理後台系統
+            📝 建立陪玩表單
           </button>
 
-        )}
+          {/* 工單明細 */}
+          <button
+            onClick={() => setPage("orders")}
+            className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
+          >
+            📄 工單歷史紀錄
+          </button>
 
-        {/* 登出 */}
+          {/* 管理員後台 */}
+          {role === "admin" && (
+
+            <button
+              onClick={() => setPage("admin")}
+              className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
+            >
+              ⚙ 管理後台系統
+            </button>
+
+          )}
+
+        </div>
+
+      </div>
+
+      {/* 最下方登出 */}
+      <div className="mt-auto pt-6">
+
         <button
           onClick={handleLogout}
-          className="bg-red-100 hover:bg-red-200 duration-300 p-4 rounded-2xl text-left text-red-500"
+          className="w-full bg-red-100 hover:bg-red-200 duration-300 p-4 rounded-2xl text-left text-red-500"
         >
           🚪 登出帳號
         </button>

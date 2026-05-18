@@ -30,7 +30,7 @@ export default function OrdersPage({ orders }) {
 
             <div>陪陪：{order.nickname}</div>
 
-            <div>老闆ID+UID：{order.bossId}</div>
+            <div>老闆暱稱：{order.bossId}</div>
 
             <div>遊戲：{order.game}</div>
 

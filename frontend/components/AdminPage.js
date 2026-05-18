@@ -127,7 +127,7 @@ export default function AdminPage({ orders }) {
               </div>
 
               <div>
-                <span className="font-bold">老闆ID+UID：</span>
+                <span className="font-bold">老闆暱稱：</span>
                 {order.bossId}
               </div>
 
