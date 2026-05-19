@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function PUT(req, { params }) {
+export async function PUT(request, context) {
 
   try {
 
-    const { id } = params;
+    const id = context.params.id;
 
-    const body = await req.json();
+    const body = await request.json();
 
     const {
       password,
@@ -35,11 +35,12 @@ export async function PUT(req, { params }) {
 
   } catch (error) {
 
-    console.error(error);
+    console.error("更新帳號錯誤:", error);
 
     return NextResponse.json({
       success: false,
-      message: "更新失敗",
+      message: "更新失敗，請聯繫管理員處理",
+      error: error.message,
     });
 
   }
