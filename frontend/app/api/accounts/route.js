@@ -1,12 +1,5 @@
 import { NextResponse } from "next/server";
-import mysql from "mysql2/promise";
-
-const db = await mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "nana123456",
-  database: "accompany_system",
-});
+import db from "@/lib/db";
 
 export async function GET() {
 
