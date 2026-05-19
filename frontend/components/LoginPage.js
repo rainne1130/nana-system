@@ -10,7 +10,7 @@ export default function LoginPage({
   return (
     <div className="min-h-screen bg-[#eaf6ff] flex items-center justify-center">
 
-      <div className="bg-white w-[420px] p-10 rounded-3xl shadow-xl">
+      <div className="bg-white w-[420px] p-10 rounded-xl shadow-xl">
 
         <h1 className="text-3xl font-bold text-center text-sky-500 mb-8">
           奈奈電競工作室

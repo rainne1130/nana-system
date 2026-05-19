@@ -9,7 +9,7 @@ export default function Sidebar({
   );
 
   return (
-    <div className="w-[260px] bg-white shadow-xl p-6 rounded-r-3xl flex flex-col min-h-screen">
+    <div className="w-[260px] bg-white shadow-xl p-6 rounded-r-xl flex flex-col h-screen sticky top-0">
 
       {/* 上方 */}
       <div>

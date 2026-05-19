@@ -387,7 +387,7 @@ export default function Home() {
       ) : (
 
         // 已登入
-        <div className="flex min-h-screen bg-[#eaf6ff]">
+        <div className="flex h-screen bg-[#eaf6ff] overflow-hidden">
 
           {/* 左側選單 */}
           <Sidebar
@@ -397,7 +397,7 @@ export default function Home() {
           />
 
           {/* 右側內容 */}
-          <div className="flex-1 p-10">
+          <div className="flex-1 p-10 overflow-y-auto">
 
             {/* 開設工單 */}
             {page === "form" && (

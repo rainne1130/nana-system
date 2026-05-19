@@ -47,7 +47,7 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-10">
+    <div className="bg-white rounded-xl shadow-xl p-10">
 
       <div className="flex justify-between items-center mb-8">
 

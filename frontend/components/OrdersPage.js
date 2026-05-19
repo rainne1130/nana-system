@@ -19,7 +19,7 @@ export default function OrdersPage({ orders }) {
 
           <div
             key={order.id}
-            className="bg-sky-50 p-5 rounded-2xl border border-sky-100 text-black"
+            className="bg-sky-50 p-5 rounded-lg border border-sky-100 text-black"
           >
 
             <div className="text-green-600 font-bold mb-2">

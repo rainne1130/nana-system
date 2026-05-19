@@ -33,7 +33,7 @@ export default function OrderForm({
 }) {
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-10">
+    <div className="bg-white rounded-2xl shadow-xl p-10">
 
       <h2 className="text-3xl font-bold text-sky-500 mb-8 text-center">
         奈奈電競工作室表單
