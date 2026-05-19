@@ -69,15 +69,9 @@ export default function AccountManagement() {
       }
 
       alert("更新成功");
-
       setEditingId(null);
-
-      fetchUsers();
-
     } catch (error) {
-
       console.error(error);
-
     }
 
   };
