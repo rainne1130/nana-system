@@ -23,8 +23,6 @@ export default function AccountManagement() {
 
       const data = await res.json();
 
-      console.log(data);
-
       if (data.success) {
         setUsers(data.users);
       }
@@ -37,34 +35,42 @@ export default function AccountManagement() {
 
   };
 
-    // 更新帳號
-  const handleUpdate = async (user) => {
+  // 更新帳號
+  const handleUpdate = async (userId) => {
 
     try {
-      
-      console.log(user);
-      const res = await fetch(`/api/accounts/${user.id}`, {
+
+      // 從最新 state 取得資料
+      const targetUser = users.find(
+        (u) => u.id === userId
+      );
+
+      console.log(targetUser);
+
+      const res = await fetch(`/api/accounts/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          password: user.password,
-          role: user.role,
-          nickname: user.nickname,
+          password: targetUser.password,
+          role: targetUser.role,
+          nickname: targetUser.nickname,
         }),
       });
 
       const data = await res.json();
+
+      console.log(data);
 
       if (!data.success) {
         alert("更新失敗");
         return;
       }
 
-      setEditingId(null);
-
       alert("更新成功");
+
+      setEditingId(null);
 
       fetchUsers();
 
@@ -144,18 +150,19 @@ export default function AccountManagement() {
 
               <input
                 disabled={editingId !== user.id}
-                value={user.password}
+                value={user.password ?? ""}
                 onChange={(e) => {
 
-                  const updatedUsers = [...users];
-
-                  const target = updatedUsers.find(
-                    (u) => u.id === user.id
+                  setUsers((prev) =>
+                    prev.map((u) =>
+                      u.id === user.id
+                        ? {
+                            ...u,
+                            password: e.target.value,
+                          }
+                        : u
+                    )
                   );
-
-                  target.password = e.target.value;
-
-                  setUsers(updatedUsers);
 
                 }}
                 className="
@@ -175,18 +182,19 @@ export default function AccountManagement() {
 
               <select
                 disabled={editingId !== user.id}
-                value={user.role}
+                value={user.role ?? "player"}
                 onChange={(e) => {
 
-                  const updatedUsers = [...users];
-
-                  const target = updatedUsers.find(
-                    (u) => u.id === user.id
+                  setUsers((prev) =>
+                    prev.map((u) =>
+                      u.id === user.id
+                        ? {
+                            ...u,
+                            role: e.target.value,
+                          }
+                        : u
+                    )
                   );
-
-                  target.role = e.target.value;
-
-                  setUsers(updatedUsers);
 
                 }}
                 className="
@@ -206,7 +214,9 @@ export default function AccountManagement() {
                 <option value="player">
                   陪玩師
                 </option>
+
               </select>
+
             </div>
 
             {/* nickname */}
@@ -217,15 +227,16 @@ export default function AccountManagement() {
                 value={user.nickname ?? ""}
                 onChange={(e) => {
 
-                  const updatedUsers = [...users];
-
-                  const target = updatedUsers.find(
-                    (u) => u.id === user.id
+                  setUsers((prev) =>
+                    prev.map((u) =>
+                      u.id === user.id
+                        ? {
+                            ...u,
+                            nickname: e.target.value,
+                          }
+                        : u
+                    )
                   );
-
-                  target.nickname = e.target.value;
-
-                  setUsers(updatedUsers);
 
                 }}
                 className="
@@ -245,33 +256,37 @@ export default function AccountManagement() {
 
               <button
 
-              onClick={() => {
+                onClick={() => {
 
-                if (editingId === user.id) {
-                  handleUpdate(user);
-                } else {
-                  setEditingId(user.id);
+                  if (editingId === user.id) {
+
+                    handleUpdate(user.id);
+
+                  } else {
+
+                    setEditingId(user.id);
+
+                  }
+
+                }}
+
+                className="
+                  bg-sky-100
+                  hover:bg-sky-200
+                  duration-300
+                  px-4
+                  py-2
+                  rounded-xl
+                  text-black
+                "
+              >
+
+                {editingId === user.id
+                  ? "編輯完成"
+                  : "編輯模式"
                 }
 
-              }}
-
-              className="
-                bg-sky-100
-                hover:bg-sky-200
-                duration-300
-                px-4
-                py-2
-                rounded-xl
-                text-black
-              "
-            >
-
-              {editingId === user.id
-                ? "編輯完成"
-                : "編輯模式"
-              }
-
-            </button>
+              </button>
 
             </div>
 
