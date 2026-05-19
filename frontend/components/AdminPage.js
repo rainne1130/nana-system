@@ -187,13 +187,19 @@ export default function AdminPage() {
               }
             `}
           >
-            {markMode && (
-              <div className="absolute top-4 left-4">
+            <div className="mb-4 flex items-center gap-3">
+
+              {/* 標記 checkbox */}
+              {markMode && (
+
                 <input
                   type="checkbox"
                   checked={order.isMarked}
+
                   onChange={async () => {
+
                     const newMarked = !order.isMarked;
+
                     setLocalOrders((prev) =>
                       prev.map((item) =>
                         item.id === order.id
@@ -204,7 +210,9 @@ export default function AdminPage() {
                           : item
                       )
                     );
+
                     try {
+
                       await fetch("/api/update-mark", {
                         method: "POST",
                         headers: {
@@ -215,39 +223,57 @@ export default function AdminPage() {
                           isMarked: newMarked ? 1 : 0,
                         }),
                       });
+
                     } catch (error) {
+
                       console.error(error);
+
                     }
+
                   }}
+
                   className="w-5 h-5 accent-green-500"
                 />
-              </div>
-            )}
 
-            {deleteMode && (
-              <div className="absolute top-4 left-12">
+              )}
+
+              {/* 刪除 checkbox */}
+              {deleteMode && (
+
                 <input
                   type="checkbox"
+
                   checked={deleteOrders.includes(order.id)}
+
                   onChange={() => {
+
                     if (deleteOrders.includes(order.id)) {
+
                       setDeleteOrders((prev) =>
                         prev.filter((id) => id !== order.id)
                       );
+
                     } else {
+
                       setDeleteOrders((prev) => [
                         ...prev,
                         order.id,
                       ]);
+
                     }
+
                   }}
+
                   className="w-5 h-5 accent-red-500"
                 />
-              </div>
-            )}
 
-            <div className="mb-4 text-green-600 font-bold">
-              建立者帳號：{order.username}
+              )}
+
+              {/* 建立者 */}
+              <div className="text-green-600 font-bold">
+                建立者帳號：{order.username}
+              </div>
+
             </div>
 
             <div className="grid grid-cols-2 gap-4 pl-8">
