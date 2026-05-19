@@ -12,15 +12,18 @@ export async function POST(req) {
     } = body;
 
     // 所有人都只能看自己的工單
-    const [rows] = await pool.query(
-      `
-      SELECT *
+    const [rows] = await pool.query(`
+      SELECT
+        orders.*,
+        users.nickname AS userNickname
       FROM orders
-      WHERE username = ?
-      ORDER BY id DESC
-      `,
-      [username]
-    );
+      LEFT JOIN users
+      ON orders.username = users.username
+      WHERE orders.username = ?
+      ORDER BY orders.id DESC
+    `, [
+      username
+    ]);
 
     return NextResponse.json({
       success: true,

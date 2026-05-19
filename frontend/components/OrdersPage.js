@@ -23,7 +23,13 @@ export default function OrdersPage({ orders }) {
           >
 
             <div className="text-green-600 font-bold mb-2">
-              建立者帳號：{order.username}
+              建立者帳號：
+              {order.username}
+
+              {order.userNickname
+                ? `（${order.userNickname}）`
+                : ""
+              }
             </div>
 
             <div>日期：{order.date}</div>
