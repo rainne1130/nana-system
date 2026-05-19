@@ -161,7 +161,7 @@ export default function AccountManagement() {
 
                 }}
                 className="
-                  w-full
+                  w-[150px]
                   bg-sky-50
                   rounded-xl
                   p-2
@@ -193,7 +193,7 @@ export default function AccountManagement() {
 
                 }}
                 className="
-                  w-full
+                  w-[140px]
                   bg-sky-50
                   rounded-xl
                   p-2
@@ -235,7 +235,7 @@ export default function AccountManagement() {
 
                 }}
                 className="
-                  w-full
+                  w-[150px]
                   bg-sky-50
                   rounded-xl
                   p-2
@@ -265,15 +265,28 @@ export default function AccountManagement() {
 
                 }}
 
-                className="
-                  bg-sky-100
-                  hover:bg-sky-200
-                  duration-300
-                  px-4
-                  py-2
-                  rounded-xl
-                  text-black
-                "
+                className={`
+                duration-300
+                px-3
+                py-1.5
+                rounded-xl
+                text-sm
+                font-bold
+
+                ${
+                  editingId === user.id
+                    ? `
+                      bg-red-400
+                      hover:bg-red-500
+                      text-white
+                    `
+                    : `
+                      bg-sky-100
+                      hover:bg-sky-200
+                      text-black
+                    `
+                }
+              `}
               >
 
                 {editingId === user.id
