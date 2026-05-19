@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function AccountManagement() {
 
   const [users, setUsers] = useState([]);
+  const [editingId, setEditingId] = useState(null);
 
   // 載入帳號
   useEffect(() => {
@@ -27,6 +28,44 @@ export default function AccountManagement() {
       if (data.success) {
         setUsers(data.users);
       }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+    // 更新帳號
+  const handleUpdate = async (user) => {
+
+    try {
+
+      const res = await fetch(`/api/accounts/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password: user.password,
+          role: user.role,
+          nickname: user.nickname,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        alert("更新失敗");
+        return;
+      }
+
+      setEditingId(null);
+
+      alert("更新成功");
+
+      fetchUsers();
 
     } catch (error) {
 
@@ -100,41 +139,138 @@ export default function AccountManagement() {
             </div>
 
             {/* password */}
-            <div className="text-black">
-              {user.password}
+            <div>
+
+              <input
+                disabled={editingId !== user.id}
+                value={user.password}
+                onChange={(e) => {
+
+                  const updatedUsers = [...users];
+
+                  const target = updatedUsers.find(
+                    (u) => u.id === user.id
+                  );
+
+                  target.password = e.target.value;
+
+                  setUsers(updatedUsers);
+
+                }}
+                className="
+                  w-full
+                  bg-sky-50
+                  rounded-xl
+                  p-2
+                  text-black
+                  outline-none
+                "
+              />
+
             </div>
 
             {/* role */}
-            <div className="text-black">
+            <div>
 
-              {user.role === "admin"
-                ? "管理員"
-                : "陪玩師"
-              }
+              <select
+                disabled={editingId !== user.id}
+                value={user.role}
+                onChange={(e) => {
 
+                  const updatedUsers = [...users];
+
+                  const target = updatedUsers.find(
+                    (u) => u.id === user.id
+                  );
+
+                  target.role = e.target.value;
+
+                  setUsers(updatedUsers);
+
+                }}
+                className="
+                  w-full
+                  bg-sky-50
+                  rounded-xl
+                  p-2
+                  text-black
+                  outline-none
+                "
+              >
+
+                <option value="admin">
+                  管理員
+                </option>
+
+                <option value="player">
+                  陪玩師
+                </option>
+              </select>
             </div>
 
             {/* nickname */}
-            <div className="text-black">
-              {user.nickname || "-"}
+            <div>
+
+              <input
+                disabled={editingId !== user.id}
+                value={user.nickname || ""}
+                onChange={(e) => {
+
+                  const updatedUsers = [...users];
+
+                  const target = updatedUsers.find(
+                    (u) => u.id === user.id
+                  );
+
+                  target.nickname = e.target.value;
+
+                  setUsers(updatedUsers);
+
+                }}
+                className="
+                  w-full
+                  bg-sky-50
+                  rounded-xl
+                  p-2
+                  text-black
+                  outline-none
+                "
+              />
+
             </div>
 
             {/* button */}
             <div>
 
               <button
-                className="
-                  bg-sky-100
-                  hover:bg-sky-200
-                  duration-300
-                  px-4
-                  py-2
-                  rounded-xl
-                  text-black
-                "
-              >
-                編輯模式
-              </button>
+
+              onClick={() => {
+
+                if (editingId === user.id) {
+                  handleUpdate(user);
+                } else {
+                  setEditingId(user.id);
+                }
+
+              }}
+
+              className="
+                bg-sky-100
+                hover:bg-sky-200
+                duration-300
+                px-4
+                py-2
+                rounded-xl
+                text-black
+              "
+            >
+
+              {editingId === user.id
+                ? "編輯完成"
+                : "編輯模式"
+              }
+
+            </button>
 
             </div>
 
