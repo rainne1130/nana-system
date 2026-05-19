@@ -26,7 +26,14 @@ export default function Sidebar({
           </div>
 
           <div>
+
             {user?.username}
+
+            {user?.nickname
+              ? `（${user.nickname}）`
+              : ""
+            }
+
           </div>
 
         </div>

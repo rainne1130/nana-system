@@ -72,7 +72,25 @@ export default function AccountManagement() {
       }
 
       alert("更新成功");
-      setEditingId(null);
+
+        // 如果修改的是目前登入帳號
+        const loginUser = JSON.parse(
+          localStorage.getItem("user")
+        );
+
+        if (loginUser?.id === targetUser.id) {
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              ...loginUser,
+              nickname: targetUser.nickname,
+            })
+          );
+
+        }
+
+        setEditingId(null);
     } catch (error) {
       console.error(error);
     }
