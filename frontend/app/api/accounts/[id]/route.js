@@ -1,19 +1,17 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function PUT(request, context) {
+export async function PUT(request, { params }) {
 
   try {
 
-    const id = context.params.id;
+    const id = Number(params.id);
 
     const body = await request.json();
 
-    const {
-    password,
-    role,
-    nickname = null,
-    } = body;
+    const password = body.password ?? "";
+    const role = body.role ?? "player";
+    const nickname = body.nickname ?? null;
 
     await db.execute(`
       UPDATE users
@@ -39,7 +37,7 @@ export async function PUT(request, context) {
 
     return NextResponse.json({
       success: false,
-      message: "更新失敗，請聯繫管理員處理",
+      message: "更新失敗",
       error: error.message,
     });
 
