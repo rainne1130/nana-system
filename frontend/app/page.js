@@ -151,20 +151,47 @@ export default function Home() {
       const data = await res.json();
 
       if (!data.success) {
+
         alert(data.message);
         return;
+
       }
 
+      // 保存登入資訊
       setRole(data.user.role);
       setIsLogin(true);
 
       localStorage.setItem("isLogin", "true");
-      localStorage.setItem("role", data.user.role);
+
+      localStorage.setItem(
+        "role",
+        data.user.role
+      );
 
       localStorage.setItem(
         "user",
         JSON.stringify(data.user)
       );
+
+      // 重新讀取目前帳號工單
+      const refreshRes = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: data.user.username,
+          role: data.user.role,
+        }),
+      });
+
+      const refreshData = await refreshRes.json();
+
+      if (refreshData.success) {
+
+        setOrders(refreshData.orders);
+
+      }
 
     } catch (error) {
 
