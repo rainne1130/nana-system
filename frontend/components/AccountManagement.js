@@ -41,7 +41,8 @@ export default function AccountManagement() {
   const handleUpdate = async (user) => {
 
     try {
-
+      
+      console.log(user);
       const res = await fetch(`/api/accounts/${user.id}`, {
         method: "PUT",
         headers: {
@@ -213,7 +214,7 @@ export default function AccountManagement() {
 
               <input
                 disabled={editingId !== user.id}
-                value={user.nickname || ""}
+                value={user.nickname ?? ""}
                 onChange={(e) => {
 
                   const updatedUsers = [...users];
