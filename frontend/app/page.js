@@ -7,6 +7,7 @@ import Sidebar from "../components/Sidebar";
 import OrderForm from "../components/OrderForm";
 import OrdersPage from "../components/OrdersPage";
 import AdminPage from "../components/AdminPage";
+import AccountManagement from "../components/AccountManagement";
 
 export default function Home() {
 
@@ -443,6 +444,11 @@ export default function Home() {
             {/* 管理員後台 */}
             {page === "admin" && role === "admin" && (
               <AdminPage />
+            )}
+
+            {/* 帳號管理 */}
+            {page === "accounts" && role === "admin" && (
+              <AccountManagement />
             )}
 
           </div>

@@ -52,12 +52,23 @@ export default function Sidebar({
           {/* 管理員後台 */}
           {role === "admin" && (
 
-            <button
-              onClick={() => setPage("admin")}
-              className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
-            >
-              ⚙ 管理後台系統
-            </button>
+            <>
+            
+              <button
+                onClick={() => setPage("admin")}
+                className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
+              >
+                ⚙ 管理後台系統
+              </button>
+
+              <button
+                onClick={() => setPage("accounts")}
+                className="bg-sky-100 hover:bg-sky-200 duration-300 p-4 rounded-2xl text-left text-black"
+              >
+                👤 帳號管理系統
+              </button>
+
+            </>
 
           )}
 
