@@ -271,7 +271,13 @@ export default function AdminPage() {
 
               {/* 建立者 */}
               <div className="text-green-600 font-bold">
-                建立者帳號：{order.username}
+                建立者帳號：
+                {order.username}
+
+                {order.userNickname
+                  ? `（${order.userNickname}）`
+                  : ""
+                }
               </div>
 
             </div>

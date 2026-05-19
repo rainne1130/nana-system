@@ -21,13 +21,15 @@ export async function POST(req) {
 
     }
 
-    const [rows] = await pool.query(
-      `
-      SELECT *
+    const [rows] = await pool.query(`
+      SELECT
+        orders.*,
+        users.nickname AS userNickname
       FROM orders
-      ORDER BY id DESC
-      `
-    );
+      LEFT JOIN users
+      ON orders.username = users.username
+      ORDER BY orders.id DESC
+    `);
 
     return NextResponse.json({
       success: true,
