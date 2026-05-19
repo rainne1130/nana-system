@@ -1,6 +1,40 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export default function AccountManagement() {
+
+  const [users, setUsers] = useState([]);
+
+  // 載入帳號
+  useEffect(() => {
+
+    fetchUsers();
+
+  }, []);
+
+  // 讀取 users
+  const fetchUsers = async () => {
+
+    try {
+
+      const res = await fetch("/api/accounts");
+
+      const data = await res.json();
+
+      console.log(data);
+
+      if (data.success) {
+        setUsers(data.users);
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
 
   return (
 
@@ -44,6 +78,69 @@ export default function AccountManagement() {
           <div>編輯模式</div>
 
         </div>
+
+        {/* users */}
+        {users.map((user) => (
+
+          <div
+            key={user.id}
+            className="
+              grid
+              grid-cols-5
+              items-center
+              p-4
+              border-t
+              border-sky-100
+            "
+          >
+
+            {/* username */}
+            <div className="text-black">
+              {user.username}
+            </div>
+
+            {/* password */}
+            <div className="text-black">
+              {user.password}
+            </div>
+
+            {/* role */}
+            <div className="text-black">
+
+              {user.role === "admin"
+                ? "管理員"
+                : "陪玩師"
+              }
+
+            </div>
+
+            {/* nickname */}
+            <div className="text-black">
+              {user.nickname || "-"}
+            </div>
+
+            {/* button */}
+            <div>
+
+              <button
+                className="
+                  bg-sky-100
+                  hover:bg-sky-200
+                  duration-300
+                  px-4
+                  py-2
+                  rounded-xl
+                  text-black
+                "
+              >
+                編輯模式
+              </button>
+
+            </div>
+
+          </div>
+
+        ))}
 
       </div>
 
