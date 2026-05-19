@@ -6,6 +6,8 @@ export default function AccountManagement() {
 
   const [users, setUsers] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [deleteUsers, setDeleteUsers] = useState([]);
 
   // 載入帳號
   useEffect(() => {
@@ -89,20 +91,108 @@ export default function AccountManagement() {
         </h1>
 
         {/* 刪除模式 */}
-        <button
-          className="
-            bg-red-100
-            hover:bg-red-200
-            duration-300
-            px-5
-            py-3
-            rounded-2xl
-            text-red-500
-            font-bold
-          "
-        >
-          刪除模式
-        </button>
+        {!deleteMode ? (
+
+          <button
+
+            onClick={() => setDeleteMode(true)}
+
+            className="
+              bg-red-100
+              hover:bg-red-200
+              duration-300
+              px-5
+              py-3
+              rounded-2xl
+              text-red-500
+              font-bold
+            "
+          >
+            刪除模式
+          </button>
+
+        ) : (
+
+          <button
+
+            onClick={async () => {
+
+              // 沒選帳號
+              if (deleteUsers.length === 0) {
+
+                alert("請先選擇帳號！");
+                return;
+
+              }
+
+              // 二次確認
+              const confirmDelete = confirm(
+                "確定要刪除選中的帳號嗎？"
+              );
+
+              if (!confirmDelete) return;
+
+              try {
+
+                const res = await fetch("/api/accounts/delete", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    userIds: deleteUsers,
+                  }),
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+
+                  alert(data.message);
+                  return;
+
+                }
+
+                // 前端同步刪除
+                setUsers((prev) =>
+                  prev.filter(
+                    (user) => !deleteUsers.includes(user.id)
+                  )
+                );
+
+                // 清空選擇
+                setDeleteUsers([]);
+
+                // 關閉刪除模式
+                setDeleteMode(false);
+
+                alert("刪除成功！");
+
+              } catch (error) {
+
+                console.error(error);
+
+                alert("刪除失敗");
+
+              }
+
+            }}
+
+            className="
+              bg-red-500
+              hover:bg-red-600
+              duration-300
+              px-5
+              py-3
+              rounded-2xl
+              text-white
+              font-bold
+            "
+          >
+            刪除完成
+          </button>
+
+        )}
 
       </div>
 
@@ -136,8 +226,44 @@ export default function AccountManagement() {
           >
 
             {/* username */}
-            <div className="text-black">
-              {user.username}
+            <div className="flex items-center gap-3 text-black">
+
+              {/* 刪除 checkbox */}
+              {deleteMode && (
+
+                <input
+                  type="checkbox"
+
+                  checked={deleteUsers.includes(user.id)}
+
+                  onChange={() => {
+
+                    if (deleteUsers.includes(user.id)) {
+
+                      setDeleteUsers((prev) =>
+                        prev.filter((id) => id !== user.id)
+                      );
+
+                    } else {
+
+                      setDeleteUsers((prev) => [
+                        ...prev,
+                        user.id,
+                      ]);
+
+                    }
+
+                  }}
+
+                  className="w-5 h-5 accent-red-500"
+                />
+
+              )}
+
+              <div>
+                {user.username}
+              </div>
+
             </div>
 
             {/* password */}
