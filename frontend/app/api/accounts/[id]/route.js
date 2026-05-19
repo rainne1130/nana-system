@@ -10,9 +10,9 @@ export async function PUT(request, context) {
     const body = await request.json();
 
     const {
-      password,
-      role,
-      nickname,
+    password,
+    role,
+    nickname = null,
     } = body;
 
     await db.execute(`
