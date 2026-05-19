@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 export default function AdminPage() {
 
   const [markMode, setMarkMode] = useState(false);
-
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [deleteOrders, setDeleteOrders] = useState([]);
   const [localOrders, setLocalOrders] = useState([]);
 
   // 讀取全部工單
@@ -50,10 +51,13 @@ export default function AdminPage() {
 
       <div className="flex justify-between items-center mb-8">
 
-        <h2 className="text-3xl font-bold text-sky-500">
-          管理員後台
-        </h2>
+      <h2 className="text-3xl font-bold text-sky-500">
+        管理員後台
+      </h2>
 
+      <div className="flex gap-3">
+
+        {/* 標記模式 */}
         {!markMode ? (
 
           <button
@@ -74,7 +78,93 @@ export default function AdminPage() {
 
         )}
 
+        {/* 刪除模式 */}
+          {!deleteMode ? (
+
+            <button
+              onClick={() => setDeleteMode(true)}
+              className="bg-red-400 hover:bg-red-500 text-white px-5 py-2 rounded-xl font-bold"
+            >
+              刪除模式
+            </button>
+
+          ) : (
+
+            <button
+
+              onClick={async () => {
+
+                // 沒選工單
+                if (deleteOrders.length === 0) {
+
+                  alert("請先選擇工單！");
+                  return;
+
+                }
+
+                // 二次確認
+                const confirmDelete = confirm(
+                  "確定要刪除選中的工單嗎？"
+                );
+
+                if (!confirmDelete) return;
+
+                try {
+
+                  const res = await fetch("/api/delete-orders", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      orderIds: deleteOrders,
+                    }),
+                  });
+
+                  const data = await res.json();
+
+                  if (!data.success) {
+
+                    alert(data.message);
+                    return;
+
+                  }
+
+                  // 前端同步刪除
+                  setLocalOrders((prev) =>
+                    prev.filter(
+                      (item) => !deleteOrders.includes(item.id)
+                    )
+                  );
+
+                  // 清空選擇
+                  setDeleteOrders([]);
+
+                  // 關閉刪除模式
+                  setDeleteMode(false);
+
+                  alert("刪除成功！");
+
+                } catch (error) {
+
+                  console.error(error);
+
+                  alert("刪除失敗");
+
+                }
+
+              }}
+
+              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl font-bold"
+            >
+              刪除完成
+            </button>
+
+          )}
+
       </div>
+
+    </div>
 
       <div className="flex flex-col gap-4">
 
@@ -97,19 +187,13 @@ export default function AdminPage() {
               }
             `}
           >
-
             {markMode && (
-
               <div className="absolute top-4 left-4">
-
                 <input
                   type="checkbox"
                   checked={order.isMarked}
-
                   onChange={async () => {
-
                     const newMarked = !order.isMarked;
-
                     setLocalOrders((prev) =>
                       prev.map((item) =>
                         item.id === order.id
@@ -120,9 +204,7 @@ export default function AdminPage() {
                           : item
                       )
                     );
-
                     try {
-
                       await fetch("/api/update-mark", {
                         method: "POST",
                         headers: {
@@ -133,20 +215,35 @@ export default function AdminPage() {
                           isMarked: newMarked ? 1 : 0,
                         }),
                       });
-
                     } catch (error) {
-
                       console.error(error);
-
                     }
-
                   }}
-
                   className="w-5 h-5 accent-green-500"
                 />
-
               </div>
+            )}
 
+            {deleteMode && (
+              <div className="absolute top-4 left-12">
+                <input
+                  type="checkbox"
+                  checked={deleteOrders.includes(order.id)}
+                  onChange={() => {
+                    if (deleteOrders.includes(order.id)) {
+                      setDeleteOrders((prev) =>
+                        prev.filter((id) => id !== order.id)
+                      );
+                    } else {
+                      setDeleteOrders((prev) => [
+                        ...prev,
+                        order.id,
+                      ]);
+                    }
+                  }}
+                  className="w-5 h-5 accent-red-500"
+                />
+              </div>
             )}
 
             <div className="mb-4 text-green-600 font-bold">
