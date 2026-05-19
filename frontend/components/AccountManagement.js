@@ -47,15 +47,16 @@ export default function AccountManagement() {
 
       console.log(targetUser);
 
-      const res = await fetch(`/api/accounts/${userId}`, {
-        method: "PUT",
+      const res = await fetch("/api/accounts/update", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          password: targetUser.password,
-          role: targetUser.role,
-          nickname: targetUser.nickname,
+        id: targetUser.id,
+        password: targetUser.password,
+        role: targetUser.role,
+        nickname: targetUser.nickname,
         }),
       });
 

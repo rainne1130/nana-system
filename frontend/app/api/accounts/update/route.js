@@ -1,25 +1,21 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function PUT(request, { params }) {
+export async function POST(request) {
 
   try {
-
-    // 取得帳號 id
-    const id = parseInt(params.id);
 
     // 取得前端資料
     const body = await request.json();
 
-    // 防止 undefined
+    const id = parseInt(body.id);
+
     const password = body.password ?? "";
     const role = body.role ?? "player";
     const nickname = body.nickname ?? null;
 
-    // debug
-    console.log("更新帳號 ID:", id);
-
-    console.log({
+    console.log("更新帳號資料:", {
+      id,
       password,
       role,
       nickname,
@@ -40,12 +36,10 @@ export async function PUT(request, { params }) {
       id,
     ]);
 
-    // debug
     console.log("SQL 更新結果:", result);
 
     return NextResponse.json({
       success: true,
-      result,
     });
 
   } catch (error) {
