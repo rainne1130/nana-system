@@ -40,6 +40,8 @@ export default function Home() {
 
   // 計時
   const [seconds, setSeconds] = useState(0);
+  const [pausedSeconds, setPausedSeconds] = useState(0);
+  const [startTimestamp, setStartTimestamp] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -92,24 +94,48 @@ export default function Home() {
       setRole(savedRole);
     }
 
+    // 恢復工單計時
+    const savedStartTime =
+      localStorage.getItem(
+        "activeOrderStartTime"
+      );
+
+    if (savedStartTime) {
+
+      setStartTimestamp(
+        Number(savedStartTime)
+      );
+
+      setIsRunning(true);
+
+    }
+
   }, []);
 
-  // 計時器
+  // 計時
   useEffect(() => {
 
     let timer;
 
-    if (isRunning) {
+    if (isRunning && startTimestamp) {
 
       timer = setInterval(() => {
-        setSeconds((prev) => prev + 1);
+
+        const now = Date.now();
+
+        const diff = Math.floor(
+          (now - startTimestamp) / 1000
+        );
+
+        setSeconds(diff);
+
       }, 1000);
 
     }
 
     return () => clearInterval(timer);
 
-  }, [isRunning]);
+  }, [isRunning, startTimestamp]);
 
   // 保存登入
   useEffect(() => {
@@ -284,6 +310,20 @@ export default function Home() {
 
     }
 
+    const now = Date.now();
+
+    // 如果是 Resume
+    const newStartTime =
+      now - (pausedSeconds * 1000);
+
+    setStartTimestamp(newStartTime);
+
+    // 保存到 localStorage
+    localStorage.setItem(
+      "activeOrderStartTime",
+      newStartTime
+    );
+
     setIsRunning(true);
     setIsPaused(false);
 
@@ -294,6 +334,9 @@ export default function Home() {
 
     // 沒開始不可暫停
     if (!isRunning) return;
+
+    // 保存目前秒數
+    setPausedSeconds(seconds);
 
     setIsRunning(false);
     setIsPaused(true);
@@ -381,6 +424,13 @@ export default function Home() {
 
       // 重置時間
       setSeconds(0);
+      setStartTimestamp(null);
+      setPausedSeconds(0);
+
+      // 清除工單 session
+      localStorage.removeItem(
+        "activeOrderStartTime"
+      );
 
       // 跳轉工單頁
       setPage("orders");
