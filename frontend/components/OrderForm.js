@@ -115,10 +115,17 @@ export default function OrderForm({
           onChange={(e) => setQuantity(e.target.value)}
           placeholder="接單數量"
           type="number"
+          step="0.5"
+          min="0"
           className={`w-full p-3 rounded-2xl border border-sky-200 text-black ${
             isRunning ? "bg-gray-100 cursor-not-allowed" : ""
           }`}
         />
+
+        {/* 總金額 */}
+        <div className="w-full p-3 rounded-2xl border border-sky-200 bg-sky-50 text-black text-xl font-bold flex items-center justify-center">
+          總金額：{(Number(price) || 0) * (Number(quantity) || 0)}
+        </div>
 
         {/* 時間 */}
         <div className="w-full p-3 rounded-2xl border border-sky-200 bg-sky-50 text-black text-xl font-bold flex items-center justify-center">

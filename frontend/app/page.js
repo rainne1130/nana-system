@@ -294,6 +294,12 @@ export default function Home() {
     // 防止重複開始
     if (isRunning) return;
 
+    // 數量只能整數或 .5
+    if (!/^\d+(\.5)?$/.test(quantity)) {
+      alert("接單數量只能輸入整數或 .5");
+      return;
+    }
+
     // 檢查欄位
     if (
       !date ||
