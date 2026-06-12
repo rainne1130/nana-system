@@ -6,6 +6,7 @@ export default function AdminPage() {
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteOrders, setDeleteOrders] = useState([]);
   const [localOrders, setLocalOrders] = useState([]);
+  const [searchAccount, setSearchAccount] = useState("");
 
   // 讀取全部工單
   useEffect(() => {
@@ -56,6 +57,17 @@ export default function AdminPage() {
       </h2>
 
       <div className="flex gap-3">
+
+        {/* 帳號查詢 */}
+        <input
+          type="text"
+          value={searchAccount}
+          onChange={(e) =>
+            setSearchAccount(e.target.value)
+          }
+          placeholder="輸入帳號查詢"
+          className="px-4 py-2 border rounded-xl w-52 text-black"
+        />
 
         {/* 標記模式 */}
         {!markMode ? (
@@ -174,169 +186,183 @@ export default function AdminPage() {
           </div>
         )}
 
-        {localOrders.map((order) => (
+        {localOrders
+          .filter((order) => {
 
-          <div
-            key={order.id}
-            className={`
-              p-5 rounded-2xl border text-black relative
-              ${
-                order.isMarked
-                  ? "bg-green-100 border-green-300"
-                  : "bg-sky-50 border-sky-100"
-              }
-            `}
-          >
-            <div className="mb-4 flex items-center gap-3">
+            if (!searchAccount.trim()) {
+              return true;
+            }
 
-              {/* 標記 checkbox */}
-              {markMode && (
+            return order.username
+              ?.toLowerCase()
+              .includes(
+                searchAccount.toLowerCase()
+              );
 
-                <input
-                  type="checkbox"
-                  checked={order.isMarked}
+          })
+          .map((order) => (
 
-                  onChange={async () => {
+            <div
+              key={order.id}
+              className={`
+                p-5 rounded-2xl border text-black relative
+                ${
+                  order.isMarked
+                    ? "bg-green-100 border-green-300"
+                    : "bg-sky-50 border-sky-100"
+                }
+              `}
+            >
+              <div className="mb-4 flex items-center gap-3">
 
-                    const newMarked = !order.isMarked;
+                {/* 標記 checkbox */}
+                {markMode && (
 
-                    setLocalOrders((prev) =>
-                      prev.map((item) =>
-                        item.id === order.id
-                          ? {
-                              ...item,
-                              isMarked: newMarked,
-                            }
-                          : item
-                      )
-                    );
+                  <input
+                    type="checkbox"
+                    checked={order.isMarked}
 
-                    try {
+                    onChange={async () => {
 
-                      await fetch("/api/update-mark", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          orderId: order.id,
-                          isMarked: newMarked ? 1 : 0,
-                        }),
-                      });
+                      const newMarked = !order.isMarked;
 
-                    } catch (error) {
-
-                      console.error(error);
-
-                    }
-
-                  }}
-
-                  className="w-5 h-5 accent-green-500"
-                />
-
-              )}
-
-              {/* 刪除 checkbox */}
-              {deleteMode && (
-
-                <input
-                  type="checkbox"
-
-                  checked={deleteOrders.includes(order.id)}
-
-                  onChange={() => {
-
-                    if (deleteOrders.includes(order.id)) {
-
-                      setDeleteOrders((prev) =>
-                        prev.filter((id) => id !== order.id)
+                      setLocalOrders((prev) =>
+                        prev.map((item) =>
+                          item.id === order.id
+                            ? {
+                                ...item,
+                                isMarked: newMarked,
+                              }
+                            : item
+                        )
                       );
 
-                    } else {
+                      try {
 
-                      setDeleteOrders((prev) => [
-                        ...prev,
-                        order.id,
-                      ]);
+                        await fetch("/api/update-mark", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            orderId: order.id,
+                            isMarked: newMarked ? 1 : 0,
+                          }),
+                        });
 
-                    }
+                      } catch (error) {
 
-                  }}
+                        console.error(error);
 
-                  className="w-5 h-5 accent-red-500"
-                />
+                      }
 
-              )}
+                    }}
 
-              {/* 建立者 */}
-              <div className="text-green-600 font-bold">
-                建立者帳號：
-                {order.username}
+                    className="w-5 h-5 accent-green-500"
+                  />
 
-                {order.userNickname
-                  ? `（${order.userNickname}）`
-                  : ""
-                }
+                )}
+
+                {/* 刪除 checkbox */}
+                {deleteMode && (
+
+                  <input
+                    type="checkbox"
+
+                    checked={deleteOrders.includes(order.id)}
+
+                    onChange={() => {
+
+                      if (deleteOrders.includes(order.id)) {
+
+                        setDeleteOrders((prev) =>
+                          prev.filter((id) => id !== order.id)
+                        );
+
+                      } else {
+
+                        setDeleteOrders((prev) => [
+                          ...prev,
+                          order.id,
+                        ]);
+
+                      }
+
+                    }}
+
+                    className="w-5 h-5 accent-red-500"
+                  />
+
+                )}
+
+                {/* 建立者 */}
+                <div className="text-green-600 font-bold">
+                  建立者帳號：
+                  {order.username}
+
+                  {order.userNickname
+                    ? `（${order.userNickname}）`
+                    : ""
+                  }
+                </div>
+
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 pl-8">
+
+                <div>
+                  <span className="font-bold">日期：</span>
+                  {order.date}
+                </div>
+
+                <div>
+                  <span className="font-bold">陪陪：</span>
+                  {order.nickname}
+                </div>
+
+                <div>
+                  <span className="font-bold">老闆暱稱：</span>
+                  {order.bossId}
+                </div>
+
+                <div>
+                  <span className="font-bold">遊戲：</span>
+                  {order.game}
+                </div>
+
+                <div>
+                  <span className="font-bold">單別：</span>
+                  {order.orderType}
+                </div>
+
+                <div>
+                  <span className="font-bold">單價：</span>
+                  {order.price}
+                </div>
+
+                <div>
+                  <span className="font-bold">數量：</span>
+                  {order.quantity}
+                </div>
+
+                <div>
+                  <span className="font-bold">總金額：</span>
+                  {order.totalPrice}
+                </div>
+
+                <div>
+                  <span className="font-bold">總時長：</span>
+                  {order.totalTime}
+                </div>
+
+                <div>
+                  <span className="font-bold">狀態：</span>
+                  {order.status}
+                </div>
+
               </div>
 
             </div>
-
-            <div className="grid grid-cols-2 gap-4 pl-8">
-
-              <div>
-                <span className="font-bold">日期：</span>
-                {order.date}
-              </div>
-
-              <div>
-                <span className="font-bold">陪陪：</span>
-                {order.nickname}
-              </div>
-
-              <div>
-                <span className="font-bold">老闆暱稱：</span>
-                {order.bossId}
-              </div>
-
-              <div>
-                <span className="font-bold">遊戲：</span>
-                {order.game}
-              </div>
-
-              <div>
-                <span className="font-bold">單別：</span>
-                {order.orderType}
-              </div>
-
-              <div>
-                <span className="font-bold">單價：</span>
-                {order.price}
-              </div>
-
-              <div>
-                <span className="font-bold">數量：</span>
-                {order.quantity}
-              </div>
-
-              <div>
-                <span className="font-bold">總金額：</span>
-                {order.totalPrice}
-              </div>
-
-              <div>
-                <span className="font-bold">總時長：</span>
-                {order.totalTime}
-              </div>
-
-              <div>
-                <span className="font-bold">狀態：</span>
-                {order.status}
-              </div>
-
-            </div>
-
-          </div>
 
         ))}
 
